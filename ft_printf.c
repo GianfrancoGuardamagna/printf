@@ -14,44 +14,71 @@
 #include <stdio.h>
 #include <unistd.h>
 
-// void ft_printnbr(va_list vargs)
-// {
-// 	int	number = va_arg(vargs, int);
-// 	write(1, &number, sizeof(int));
-// }
-
-void ft_printchar(va_list vargs)
+/////////////////////////////////////////////////
+void ft_recursivenbr(int n)
 {
-	char charsy = va_arg(vargs, char);
-	write(1, &charsy, sizeof(char));
+    if (n / 10)
+		ft_recursivenbr(n / 10);
+    
+    char digit = (n % 10) + '0';
+    write(1, &digit, 1);
 }
 
-// void ft_printstr(va_list vargs)
-// {
-	
-// }
+void ft_printnbr(va_list vargs)
+{
+	int	number = va_arg(vargs, int);
+	if(number < 0)
+	{
+		write(1, "-", 1);
+		number = -number;
+	}
+	if(number >= 10)
+	{
+		ft_recursivenbr(number);
+	}
+	else
+	{
+		number = number + '0';
+		write(1, &number, 1);
+	}
+}
+/////////////////////////////////////////////////
+void ft_printchar(va_list vargs)
+{
+    char charsy = (char)va_arg(vargs, int);
+    write(1, &charsy, 1);
+}
+/////////////////////////////////////////////////
+void ft_printstr(va_list vargs)
+{
+	int	i;
+	char *stringy;
+
+	i = 0;
+	stringy = (char *)va_arg(vargs, char *);
+	while(*stringy != '\0')
+	{
+		write(1, stringy, 1);
+		*stringy++;
+	}
+}
+/////////////////////////////////////////////////
+void ft_printpstr(va_list vargs)
+{
+	void *stringy = (void *)va_arg(vargs, void *);
+	write(1, &stringy, 1);
+}
 
 static void	parameter_manager(char	stringy, va_list vargs)
 {
 	if (stringy == 'c')
-	{
 		ft_printchar(vargs);
-	}
-	// else if (stringy == 's')
-	// {
-	// 	va_arg(vargs, char *);
-	// 	printf("%s", vargs);
-	// }
-	// else if (stringy == 'p')
-	// {
-	// 	va_arg(vargs, void *);
-	// 	printf("%p", vargs);
-	// }
-	// else if (stringy == 'd' || stringy == 'i')
-	// {
-	// 	va_arg(vargs, int);
-	// 	printf("%i", vargs);
-	// }
+	else if (stringy == 's')
+		ft_printstr(vargs);
+	else if (stringy == 'p')
+		ft_printpstr(vargs);
+	else if (stringy == 'd' || stringy == 'i')
+		ft_printnbr(vargs);
 	// else if (stringy == 'u')
 	// {
 	// 	va_arg(vargs, int);
@@ -69,27 +96,32 @@ static void	parameter_manager(char	stringy, va_list vargs)
 	// }
 }
 
-int	ft_printf(char const *stringy, ...)
+int ft_printf(char const *stringy, ...)
 {
-	va_list	vargs;
+    va_list vargs;
 
-	va_start(vargs, stringy);
-	while (*stringy != '\0')
-	{
-		if (*stringy == '%')
-		{	
-			stringy++;
-			parameter_manager(*stringy, vargs);
-		}
-		stringy++;
-		write(1, stringy, sizeof(char));
-	}
-	va_end(vargs);
-	return 0;
+    va_start(vargs, stringy);
+    while (*stringy != '\0')
+    {
+        if (*stringy == '%')
+        {   
+            stringy++;
+            parameter_manager(*stringy, vargs);
+        }
+        else
+        {
+            write(1, stringy, 1);
+        }
+        stringy++;
+    }
+    va_end(vargs);
+    return 0;
 }
 
 int	main()
 {
-	ft_printf("%c Ay Miguel %c\n", 'A', 'r');
+	int	i = 4;
+	int	*j = &i;
+	ft_printf("%c\n%i\n%d\n%s\n%p\n", 'A', 456789, -2, "Esto es un string", j);
 	return 0;
 }
