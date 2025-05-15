@@ -10,118 +10,49 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "ft_printf.h"
 
-/////////////////////////////////////////////////
-void ft_recursivenbr(int n)
-{
-    if (n / 10)
-		ft_recursivenbr(n / 10);
-    
-    char digit = (n % 10) + '0';
-    write(1, &digit, 1);
-}
-
-void ft_printnbr(va_list vargs)
-{
-	int	number = va_arg(vargs, int);
-	if(number < 0)
-	{
-		write(1, "-", 1);
-		number = -number;
-	}
-	if(number >= 10)
-	{
-		ft_recursivenbr(number);
-	}
-	else
-	{
-		number = number + '0';
-		write(1, &number, 1);
-	}
-}
-/////////////////////////////////////////////////
-void ft_printchar(va_list vargs)
-{
-    char charsy = (char)va_arg(vargs, int);
-    write(1, &charsy, 1);
-}
-/////////////////////////////////////////////////
-void ft_printstr(va_list vargs)
-{
-	int	i;
-	char *stringy;
-
-	i = 0;
-	stringy = (char *)va_arg(vargs, char *);
-	while(*stringy != '\0')
-	{
-		write(1, stringy, 1);
-		*stringy++;
-	}
-}
-/////////////////////////////////////////////////
-void ft_printpstr(va_list vargs)
-{
-	void *stringy = (void *)va_arg(vargs, void *);
-	write(1, &stringy, 1);
-}
-
-static void	parameter_manager(char	stringy, va_list vargs)
+static int	parameter_manager(char	stringy, va_list vargs)
 {
 	if (stringy == 'c')
-		ft_printchar(vargs);
+		return (ft_printchar(va_arg(vargs, int)));
 	else if (stringy == 's')
-		ft_printstr(vargs);
+		return (ft_printstr(va_arg(vargs, char *)));
 	else if (stringy == 'p')
-		ft_printpstr(vargs);
+		return (ft_printptr(va_arg(vargs, void *)));
 	else if (stringy == 'd' || stringy == 'i')
-		ft_printnbr(vargs);
-	// else if (stringy == 'u')
-	// {
-	// 	va_arg(vargs, int);
-	// 	printf("%i", vargs);
-	// }
-	// else if (stringy == 'x' || stringy == 'X')
-	// {
-	// 	va_arg(vargs, int);
-	// 	printf("%i", vargs);
-	// }
-	// else if (stringy == '%')
-	// {
-	// 	va_arg(vargs, int);
-	// 	printf("%i", vargs);
-	// }
+		return (ft_printnbr(va_arg(vargs, int)));
+	else if (stringy == 'u')
+		return (ft_printunbr(va_arg(vargs, unsigned int)));
+	else if (stringy == 'x')
+		return (ft_printhex(va_arg(vargs, unsigned int), "0123456789abcdef"));
+	else if (stringy == 'X')
+		return (ft_printhex(va_arg(vargs, unsigned int), "0123456789ABCDEF"));
+	else if (stringy == '%')
+		return (write(1, "%", 1));
+    return (0);
 }
 
 int ft_printf(char const *stringy, ...)
 {
     va_list vargs;
+    int parameters;
 
     va_start(vargs, stringy);
+    parameters = 0;
     while (*stringy != '\0')
     {
-        if (*stringy == '%')
+        if (*stringy == '%' && *(stringy + 1))
         {   
             stringy++;
-            parameter_manager(*stringy, vargs);
+            parameters += parameter_manager(*stringy, vargs);
         }
         else
         {
-            write(1, stringy, 1);
+            parameters += write(1, stringy, 1);
         }
         stringy++;
     }
     va_end(vargs);
-    return 0;
-}
-
-int	main()
-{
-	int	i = 4;
-	int	*j = &i;
-	ft_printf("%c\n%i\n%d\n%s\n%p\n", 'A', 456789, -2, "Esto es un string", j);
-	return 0;
+    return (parameters);
 }
