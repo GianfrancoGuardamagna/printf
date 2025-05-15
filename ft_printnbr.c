@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-static int ft_recursivenbr(int n)
+static int ft_recursivenbr(long n)
 {
 	int	count;
 	char digit;
@@ -20,10 +20,10 @@ int ft_printnbr(int number)
 
 	n = number;
 	count = 0;
-	if(number < 0)
+	if(n < 0)
 	{
 		count += write(1, "-", 1);
-		number = -number;
+		n = -n;
 	}
 	count += ft_recursivenbr(n);
 	return (count);

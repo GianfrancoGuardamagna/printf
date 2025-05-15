@@ -19,7 +19,7 @@ static int	parameter_manager(char	stringy, va_list vargs)
 	else if (stringy == 's')
 		return (ft_printstr(va_arg(vargs, char *)));
 	else if (stringy == 'p')
-		return (ft_printptr(va_arg(vargs, void *)));
+		return ((ft_printptr(va_arg(vargs, void *))));
 	else if (stringy == 'd' || stringy == 'i')
 		return (ft_printnbr(va_arg(vargs, int)));
 	else if (stringy == 'u')
