@@ -6,13 +6,13 @@
 /*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 14:55:59 by gguardam          #+#    #+#             */
-/*   Updated: 2025/05/14 14:07:58 by gguardam         ###   ########.fr       */
+/*   Updated: 2025/05/17 13:21:44 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static int	parameter_manager(char	stringy, va_list vargs)
+static int	parameter_manager(char stringy, va_list vargs)
 {
 	if (stringy == 'c')
 		return (ft_printchar(va_arg(vargs, int)));
@@ -30,29 +30,29 @@ static int	parameter_manager(char	stringy, va_list vargs)
 		return (ft_printhex(va_arg(vargs, unsigned int), "0123456789ABCDEF"));
 	else if (stringy == '%')
 		return (write(1, "%", 1));
-    return (0);
+	return (0);
 }
 
-int ft_printf(char const *stringy, ...)
+int	ft_printf(char const *stringy, ...)
 {
-    va_list vargs;
-    int parameters;
+	va_list	vargs;
+	int		parameters;
 
-    va_start(vargs, stringy);
-    parameters = 0;
-    while (*stringy != '\0')
-    {
-        if (*stringy == '%' && *(stringy + 1))
-        {   
-            stringy++;
-            parameters += parameter_manager(*stringy, vargs);
-        }
-        else
-        {
-            parameters += write(1, stringy, 1);
-        }
-        stringy++;
-    }
-    va_end(vargs);
-    return (parameters);
+	parameters = 0;
+	va_start(vargs, stringy);
+	while (*stringy != '\0')
+	{
+		if (*stringy == '%' && *(stringy + 1))
+		{
+			stringy++;
+			parameters += parameter_manager(*stringy, vargs);
+		}
+		else
+		{
+			parameters += write(1, stringy, 1);
+		}
+		stringy++;
+	}
+	va_end(vargs);
+	return (parameters);
 }

@@ -3,6 +3,8 @@ NAME = libftprintf.a
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
+LIBFT = libft.a
+
 SOURCE = ft_printf.c \
 		ft_printchar.c \
 		ft_printnbr.c \
@@ -21,6 +23,7 @@ RM = rm -f
 all: $(NAME)
 
 $(NAME): $(OBJ)
+	cp $(LIBFT) $(NAME)
 	$(AR) $@ $^
 
 %.o: %.c $(INCLUDE)
