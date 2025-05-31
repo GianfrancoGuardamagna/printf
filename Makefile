@@ -3,15 +3,14 @@ NAME = libftprintf.a
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-LIBFT = libft.a
-
 SOURCE = ft_printf.c \
 		ft_printchar.c \
 		ft_printnbr.c \
 		ft_printptr.c \
 		ft_printstr.c \
 		ft_printhex.c \
-		ft_printunbr.c
+		ft_printunbr.c \
+		ft_strlen.c
 
 OBJ = $(SOURCE:.c=.o)
 
@@ -23,7 +22,6 @@ RM = rm -f
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	cp $(LIBFT) $(NAME)
 	$(AR) $@ $^
 
 %.o: %.c $(INCLUDE)

@@ -6,7 +6,7 @@
 /*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 14:55:59 by gguardam          #+#    #+#             */
-/*   Updated: 2025/05/17 13:21:44 by gguardam         ###   ########.fr       */
+/*   Updated: 2025/05/31 15:44:52 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,7 @@ int	ft_printf(char const *stringy, ...)
 			parameters += parameter_manager(*stringy, vargs);
 		}
 		else
-		{
 			parameters += write(1, stringy, 1);
-		}
 		stringy++;
 	}
 	va_end(vargs);
